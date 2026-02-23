@@ -51,6 +51,7 @@ export default function Home() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [darkMode, setDarkMode] = useState(true);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -81,18 +82,41 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 text-white">
+    <div className={`min-h-screen bg-gradient-to-br transition-colors duration-500 ${darkMode ? "from-slate-900 via-blue-950 to-indigo-950 text-white" : "from-sky-100 via-blue-50 to-indigo-100 text-slate-900"}`}>
       {/* Decorative background elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/3 -left-20 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-1/4 w-80 h-80 bg-purple-500/8 rounded-full blur-3xl" />
+        <div className={`absolute -top-40 -right-40 w-96 h-96 rounded-full blur-3xl ${darkMode ? "bg-blue-500/10" : "bg-blue-400/20"}`} />
+        <div className={`absolute top-1/3 -left-20 w-72 h-72 rounded-full blur-3xl ${darkMode ? "bg-indigo-500/10" : "bg-indigo-300/20"}`} />
+        <div className={`absolute bottom-20 right-1/4 w-80 h-80 rounded-full blur-3xl ${darkMode ? "bg-purple-500/8" : "bg-purple-300/15"}`} />
       </div>
 
       <main className="relative z-10 max-w-3xl mx-auto px-4 py-12 sm:py-20">
+        {/* Theme toggle */}
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className={`p-2.5 rounded-xl backdrop-blur-md border transition-all duration-300 cursor-pointer ${darkMode ? "bg-white/10 border-white/15 hover:bg-white/20 text-yellow-300" : "bg-white/60 border-slate-200 hover:bg-white/80 text-slate-700"}`}
+            aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            {darkMode ? (
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            ) : (
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+              </svg>
+            )}
+          </button>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 mb-4 px-4 py-1.5 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full text-sm text-blue-200">
+          <div className={`inline-flex items-center gap-2 mb-4 px-4 py-1.5 backdrop-blur-sm border rounded-full text-sm ${darkMode ? "bg-white/5 border-white/10 text-blue-200" : "bg-white/60 border-slate-200 text-blue-700"}`}>
             <svg
               className="w-4 h-4"
               fill="none"
@@ -108,10 +132,10 @@ export default function Home() {
             </svg>
             Weather Forecast
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-3 bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
+          <h1 className={`text-4xl sm:text-5xl font-bold tracking-tight mb-3 bg-gradient-to-r bg-clip-text text-transparent ${darkMode ? "from-white to-blue-200" : "from-slate-900 to-blue-700"}`}>
             7-Day Forecast
           </h1>
-          <p className="text-blue-200/70 text-lg">
+          <p className={`text-lg ${darkMode ? "text-blue-200/70" : "text-slate-500"}`}>
             Enter your zip code to see what&apos;s ahead
           </p>
         </div>
@@ -127,13 +151,13 @@ export default function Home() {
                 placeholder="Enter zip code"
                 value={zip}
                 onChange={(e) => setZip(e.target.value.replace(/\D/g, ""))}
-                className="w-full px-5 py-3.5 bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl text-white placeholder-blue-200/40 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-transparent transition-all text-lg"
+                className={`w-full px-5 py-3.5 backdrop-blur-md border rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-transparent transition-all text-lg ${darkMode ? "bg-white/10 border-white/15 text-white placeholder-blue-200/40" : "bg-white/70 border-slate-300 text-slate-900 placeholder-slate-400"}`}
               />
             </div>
             <button
               type="submit"
               disabled={loading}
-              className="px-7 py-3.5 bg-blue-500 hover:bg-blue-400 disabled:bg-blue-500/50 rounded-2xl font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25 active:scale-95 text-lg cursor-pointer"
+              className={`px-7 py-3.5 rounded-2xl font-semibold transition-all duration-200 hover:shadow-lg active:scale-95 text-lg cursor-pointer ${darkMode ? "bg-blue-500 hover:bg-blue-400 disabled:bg-blue-500/50 hover:shadow-blue-500/25 text-white" : "bg-blue-600 hover:bg-blue-500 disabled:bg-blue-400/50 hover:shadow-blue-600/25 text-white"}`}
             >
               {loading ? (
                 <svg
@@ -164,7 +188,7 @@ export default function Home() {
 
         {/* Error */}
         {error && (
-          <div className="max-w-md mx-auto mb-8 px-5 py-4 bg-red-500/10 border border-red-400/20 rounded-2xl text-red-200 text-center backdrop-blur-sm">
+          <div className={`max-w-md mx-auto mb-8 px-5 py-4 border rounded-2xl text-center backdrop-blur-sm ${darkMode ? "bg-red-500/10 border-red-400/20 text-red-200" : "bg-red-50 border-red-200 text-red-700"}`}>
             {error}
           </div>
         )}
@@ -176,7 +200,7 @@ export default function Home() {
             <div className="text-center mb-8">
               <h2 className="text-2xl font-bold flex items-center justify-center gap-2">
                 <svg
-                  className="w-5 h-5 text-blue-300"
+                  className={`w-5 h-5 ${darkMode ? "text-blue-300" : "text-blue-600"}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -201,7 +225,7 @@ export default function Home() {
             {/* Today highlight card */}
             {weather.daily.length > 0 && (
               <div
-                className={`mb-6 p-8 rounded-3xl bg-gradient-to-br ${getWeatherGradient(weather.daily[0].icon)} shadow-2xl`}
+                className={`mb-6 p-8 rounded-3xl bg-gradient-to-br ${getWeatherGradient(weather.daily[0].icon)} shadow-2xl text-white`}
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -234,12 +258,12 @@ export default function Home() {
               {weather.daily.slice(1).map((day) => (
                 <div
                   key={day.date}
-                  className="group p-5 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl hover:bg-white/10 transition-all duration-300 hover:border-white/20"
+                  className={`group p-5 backdrop-blur-sm border rounded-2xl transition-all duration-300 ${darkMode ? "bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20" : "bg-white/60 border-slate-200 hover:bg-white/80 hover:border-slate-300 shadow-sm"}`}
                 >
-                  <p className="text-sm font-medium text-blue-200/70 mb-1">
+                  <p className={`text-sm font-medium mb-1 ${darkMode ? "text-blue-200/70" : "text-slate-500"}`}>
                     {getDayName(day.date)}
                   </p>
-                  <p className="text-xs text-blue-200/40 mb-3">
+                  <p className={`text-xs mb-3 ${darkMode ? "text-blue-200/40" : "text-slate-400"}`}>
                     {getFormattedDate(day.date)}
                   </p>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -250,11 +274,11 @@ export default function Home() {
                   />
                   <div className="text-center">
                     <span className="text-xl font-bold">{day.temp_max}&deg;</span>
-                    <span className="text-blue-200/50 ml-2">
+                    <span className={`ml-2 ${darkMode ? "text-blue-200/50" : "text-slate-400"}`}>
                       {day.temp_min}&deg;
                     </span>
                   </div>
-                  <p className="text-xs text-blue-200/50 capitalize text-center mt-2">
+                  <p className={`text-xs capitalize text-center mt-2 ${darkMode ? "text-blue-200/50" : "text-slate-500"}`}>
                     {day.description}
                   </p>
                 </div>
